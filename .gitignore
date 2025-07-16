@@ -1,24 +1,51 @@
-# build output
-dist/
-
-# generated types
-.astro/
-
-# dependencies
+# ───── FRONTEND (React + Vite) ─────
 node_modules/
+dist/
+.vite/
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Optional: IDE config
+.vscode/
+*.log
 
-# environment variables
+# ───── BACKEND (FastAPI / Python) ─────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+venv/
 .env
-.env.production
 
-# macOS-specific files
+# Uvicorn / FastAPI logs
+*.log
+
+# ───── SYSTEM FILES ─────
 .DS_Store
+Thumbs.db
 
-# jetbrains setting folder
-.idea/
+# ───── PACKAGE MANAGER LOCKFILES ─────
+# Keep only the one you're using
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ───── COVERAGE / TEST FILES ─────
+coverage/
+htmlcov/
+*.cover
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.coveragerc
+.tox/
+
+# ───── NEXT DEPLOYMENT (Optional) ─────
+.vercel/
+.netlify/

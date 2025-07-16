@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+    --sidebar: 430px;
+    --songpanel: 430px;
+}
+
+@theme {
+    --color-principal: #000000;
+    --color-secondary: #1a1a1a;
+    --color-terciary: #141414;
+}
