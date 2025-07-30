@@ -1,8 +1,9 @@
 import ArtistTracks from "../src/components/ArtistTracks";
 import AsideMenu from "../src/components/AsideMenu";
 import Header from "../src/components/Header";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children }) {
+export default function Layout() {
   return (
     <div className="relative h-screen text-white bg-principal">
       {/* Header sin padding lateral */}
@@ -23,7 +24,7 @@ export default function Layout({ children }) {
         </aside>
 
         <main className="[grid-area:main] bg-secondary rounded-lg overflow-y-auto">
-          <ArtistTracks />
+          <Outlet />
         </main>
 
         <aside className="[grid-area:song] bg-secondary rounded-lg">ASIDE SONG</aside>
