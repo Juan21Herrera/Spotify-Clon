@@ -7,7 +7,7 @@ export default function Home() {
   const [homeData, setHomeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { playlists } = useMenuPlaylists();
+  const { playlists, loading: playlistLoading, error: playlistsError } = useMenuPlaylists();
 
   useEffect(() => {
     axios
@@ -23,56 +23,61 @@ export default function Home() {
       });
   }, []);
 
-  if (loading)
-    return <p className="text-center mt-10">Loading recommendations</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+  if (loading || playlistLoading) return <p className="text-center mt-10">Loading recommendations</p>;
+  if (error || playlistsError) return <p className="text-center mt-10 text-red-500">{error || playlistsError}</p>;
 
   return (
     <div className="p-6 space-y-10">
-      <section>
-        <h1 className="text-xl font-bold mb-4">Tu Biblioteca</h1>
-        <div className="flex flex-wrap gap-4">
-          {homeData?.made_for_you?.map((playlist) => (
-            <PlaylistRowCard
-              key={playlist.id}
-              id={playlist.id}
-              title={playlist.name || playlist.title}
-              subtitle={playlist.description || "Playlist personal"}
-              image={
-                playlist.picture_medium ||
-                playlist.picture ||
-                playlist.cover_medium
-              }
-            />
-          ))}
+      {/* Your Library Section */}
+      <section className="mb-8">
+        <h1 className="text-xl font-bold mb-4">Your Library NO EXISTE EN SPOTIFY PERO REFERENCIA TEMPORAL</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          {playlists.length > 0 ? (
+            playlists.map((playlist) => (
+              <PlaylistRowCard
+                key={playlist.id}
+                id={playlist.id}
+                title={playlist.title}
+                image={playlist.image_medium || playlist.picture || playlist.cover_medium}
+                layout="horizontal"
+              />
+            ))
+          ) : (
+            <p className="text-gray-400">Don't have playlists yet</p>
+          )}
         </div>
+
+        {/* Recommendation Section */}
       </section>
-      <Section title="Made for you" items={homeData.made_for_you} />
-      <Section title="Daily Mix" items={homeData.daily_mix} />
-      <Section title="Popular Stations" items={homeData.popular_stations} />
+          {Array.isArray(homeData?.made_for_you) && homeData.made_for_you.length > 0 && (
+            <Section title="Made for you" items={homeData.made_for_you} />
+          )}
+
+          {Array.isArray(homeData?.daily_mix) && homeData.daily_mix.length > 0 && (
+            <Section title="Daily Mix" items={homeData.daily_mix} />
+          )}
+
+          {Array.isArray(homeData?.popular_stations) && homeData.popular_stations.length > 0 && (
+            <Section title="Popular Stations" items={homeData.popular_stations} />
+          )}
+
     </div>
   );
 }
 
 function Section({ title, items }) {
   return (
-    <div>
+    <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="flex overflow-x-auto gap-4 scrollbar-hide">
         {items.map((item) => (
-          <div
+          <PlaylistRowCard
             key={item.id}
-            className="p-2 rounded-lg text-white shadow hover:bg-[#252525] transition-all"
-          >
-            <img
-              src={item.picture_medium || item.picture || item.cover_medium}
-              alt={item.title}
-              className="rounded-md mb-2 w-full h-40 object-cover"
-            />
-            <h3 className="text-lg font-semibold truncate">
-              {item.name || item.title}
-            </h3>
-          </div>
+            id={item.id}
+            title={item.name || item.title}
+            image={item.picture_medium || item.picture || item.cover_medium}
+            layout="vertical"
+          />
         ))}
       </div>
     </div>
