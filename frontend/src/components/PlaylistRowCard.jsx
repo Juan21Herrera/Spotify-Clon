@@ -1,20 +1,25 @@
 import { Link } from "react-router-dom";
 
+/**
+ * PlaylistRowCard
+ * - layout = "horizontal" (small row card) or "vertical" (square card)
+ */
 export default function PlaylistRowCard({ title, image, id, layout = "vertical" }) {
   const isHorizontal = layout === "horizontal";
+
+  const baseClass = isHorizontal
+    ? "flex items-center gap-4 bg-[#282828] rounded-md p-3 hover:bg-[#333] transition-colors cursor-pointer w-[260px] h-20"
+    : "flex flex-col bg-[#282828] rounded-md p-3 hover:bg-[#333] transition-colors cursor-pointer w-[160px]";
+
   return (
-    <Link
-      to={`/playlist/${id}`}
-      className={`flex ${isHorizontal ? "flex-row items-center" : "flex-col"} bg-[#282828] rounded-md hover:bg-[#383838] transition-colors duration-200 cursor-pointer overflow-hidden`}
-      style={{ width: isHorizontal ? "100%" : 160, height: isHorizontal ? 64 : 200 }}
-    >
+    <Link to={`/playlist/${id}`} className={baseClass}>
       <img
-        src={image}
+        src={image || "/placeholder.png"}
         alt={title}
-        className={`${isHorizontal ? "w-16 h-16 mr-4" : "w-full h-32"} object-cover rounded-sm shrink-0`}
+        className={isHorizontal ? "w-14 h-14 rounded-sm object-cover flex-shrink-0" : "w-full h-32 rounded-sm object-cover"}
       />
-      <div className={`text-white ${isHorizontal ? "text-sm font-semibold truncate" : "text-center mt-2 text-sm font-bold"}`}>
-        {title}
+      <div className={isHorizontal ? "ml-2 overflow-hidden" : "mt-2 text-center"}>
+        <p className="text-white text-sm font-semibold truncate">{title}</p>
       </div>
     </Link>
   );

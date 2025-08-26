@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { usePlayer } from "../context/PlayerContext.jsx";
 import axios from "axios";
 
 function formatDuration(seconds) {
@@ -13,6 +14,7 @@ export default function PlaylistDetail() {
     const [playlist, setPlaylist] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const {playTrack, current, playing} = usePlayer();
 
     useEffect(() => {
         axios.get(`http://localhost:8000/playlist/${id}`)
@@ -74,16 +76,24 @@ export default function PlaylistDetail() {
                             <img 
                                 src={track.album.cover_small}
                                 alt={track.title}
-                                className="w-10 h-10 rounded"
+                                className="w-10 h-10 rounded object-cover"
                             />
                             <div>
                                 <p className="font-medium">{track.title}</p>
-                                <p className="text-gray-400 text-xs">{track.artist.name}</p>
+                                <p className="text-gray-400 text-xs">{track.artist?.name}</p>
                             </div>
+
+                            <div className="col-span-1 text-right">
+                                <button
+                                    onClick={() => playTrack(playlist.tracks.data, index)}
+                                    className="px-2 py-1 rounded hover:bg-[#2a2a2a]"
+                                    >
+                                    {current?.id === track.id && playing ? "⏸" : "▶"}
+                                </button>
+                            </div>
+
                         </div>
-                        <span className="col-span-3 text-gray-300 text-sm">{track.album.title}</span>
-                        <span className="col-span-3 text-gray-400 text-sm">22 Jul 2025</span> {/* Placeholder */}
-                        <span className="col-span-1 text-right text-gray-400">{formatDuration(track.duration)}</span>
+                        
                     </div>
                 ))}
             </div>

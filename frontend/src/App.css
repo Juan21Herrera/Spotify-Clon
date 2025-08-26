@@ -10,3 +10,7 @@
     --color-secondary: #1a1a1a;
     --color-terciary: #141414;
 }
+
+/* Ocultar scrollbar (visual) para carruseles */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

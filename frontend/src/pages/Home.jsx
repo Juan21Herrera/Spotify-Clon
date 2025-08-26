@@ -31,13 +31,13 @@ export default function Home() {
       {/* Your Library Section */}
       <section className="mb-8">
         <h1 className="text-xl font-bold mb-4">Your Library NO EXISTE EN SPOTIFY PERO REFERENCIA TEMPORAL</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {playlists.length > 0 ? (
             playlists.map((playlist) => (
               <PlaylistRowCard
                 key={playlist.id}
                 id={playlist.id}
-                title={playlist.title}
+                title={playlist.title || playlist.name}
                 image={playlist.image_medium || playlist.picture || playlist.cover_medium}
                 layout="horizontal"
               />
@@ -46,9 +46,11 @@ export default function Home() {
             <p className="text-gray-400">Don't have playlists yet</p>
           )}
         </div>
-
-        {/* Recommendation Section */}
       </section>
+        {/* Recommendation Section */}
+
+      <section className="overflow-x-auto scrollbar-hide flex gap-4 py-2">
+
           {Array.isArray(homeData?.made_for_you) && homeData.made_for_you.length > 0 && (
             <Section title="Made for you" items={homeData.made_for_you} />
           )}
@@ -60,6 +62,7 @@ export default function Home() {
           {Array.isArray(homeData?.popular_stations) && homeData.popular_stations.length > 0 && (
             <Section title="Popular Stations" items={homeData.popular_stations} />
           )}
+      </section>
 
     </div>
   );

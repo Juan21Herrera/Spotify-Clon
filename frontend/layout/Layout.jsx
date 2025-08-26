@@ -1,39 +1,36 @@
-import ArtistTracks from "../src/components/ArtistTracks";
 import AsideMenu from "../src/components/AsideMenu";
+import AsideSong from "../src/components/AsideSong";
 import Header from "../src/components/Header";
 import { Outlet } from "react-router-dom";
+import PlayerBar from "../src/components/PlayerBar";
+
+// const [leftWidth, setLeftWidth] = useState(280);
+// const [rightWidth, setRightWidth] = useState(360);
 
 export default function Layout() {
   return (
-    <div className="relative h-screen text-white bg-principal">
-      {/* Header sin padding lateral */}
-      <header className="h-[64px] sticky top-0 z-10 bg-[#] flex items-center justify-between w-full">
+    <div className="relative min-h-screen bg-[#000] text-white pb-20"> {/* pb-20 para dejar espacio al PlayerBar */}
+      <header className="h-16 sticky top-0 z-30 bg-transparent flex items-center px-4">
         <Header />
       </header>
 
-      {/* Contenedor principal en grid */}
-      <div
-        className="grid h-[calc(100%-64px-72px)]
-                   grid-cols-[var(--sidebar)_1fr_var(--songpanel)]
-                   grid-rows-[1fr]
-                   [grid-template-areas:'sidebar_main_song']
-                   gap-2 p-2"
-      >
-        <aside className="[grid-area:sidebar] flex-col flex overflow-y-auto bg-secondary rounded-lg">
+      <div className="grid grid-cols-[280px_1fr_360px] gap-4 p-4" style={{ minHeight: "calc(100vh - 64px - 72px)" }}>
+        <aside className="bg-[#121212] rounded-lg p-2 overflow-auto">
           <AsideMenu />
         </aside>
 
-        <main className="[grid-area:main] bg-secondary rounded-lg overflow-y-auto">
+        <main className="bg-[#121212] rounded-lg p-4 overflow-auto">
           <Outlet />
         </main>
 
-        <aside className="[grid-area:song] bg-secondary rounded-lg">ASIDE SONG</aside>
+        <aside className="bg-[#121212] rounded-lg p-4 overflow-auto">
+          {/* Aquí colocarás AsideSong (info de la canción actual) */}
+          <AsideSong />
+        </aside>
       </div>
 
-      {/* Footer */}
-      <footer className="h-[72px] bg-principal flex items-center justify-center w-full">
-        PLAYER
-      </footer>
+      {/* PlayerBar (fijo) */}
+      <PlayerBar />
     </div>
   );
 }

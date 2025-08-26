@@ -12,47 +12,28 @@ router = APIRouter(
     },
 )
 
-
-
-
-# Search artist by name
-@router.get("/artist")
-def search_artist(name: str = Query(..., description="Artist name")):
+@router.get("")
+async def search_all(q: str = Query(..., description="Texto a buscar en Deezer")):
     try:
-        response = requests.get(f"{URL_FETCH}/search/artist", params={"q": name})
-        data = response.json()
+        results = {}
 
-        if not data.get("data"):
-            raise HTTPException(status_code=404, detail="Not artist found")
-        
-        return data["data"] # Return the first artist found
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Canciones
+        track_res = requests.get(f"{URL_FETCH}/search/track", params={"q": q}).json()
+        results["tracks"] = track_res.get("data", [])
 
-# Search playlist by artist name
-@router.get("/playlist")
-def search_playlist(name: str = Query(..., description="Playlist or artist name")):
-    try:
-        response = requests.get(f"{URL_FETCH}/search/playlist", params={"q": name})
-        data = response.json()
+        # Artistas
+        artist_res = requests.get(f"{URL_FETCH}/search/artist", params={"q": q}).json()
+        results["artists"] = artist_res.get("data", [])
 
-        if not data.get("data"):
-            raise HTTPException(status_code=404, detail="No playlist found")
-        return data["data"]
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Playlists
+        playlist_res = requests.get(f"{URL_FETCH}/search/playlist", params={"q": q}).json()
+        results["playlists"] = playlist_res.get("data", [])
 
-# Search songs
-@router.get("/track")
-def search_track(name: str = Query(..., description="Track name")):
-    try:
-        response = requests.get(f"{URL_FETCH}/search/track", params={"q": name})
-        data = response.json()
+        # Álbumes
+        album_res = requests.get(f"{URL_FETCH}/search/album", params={"q": q}).json()
+        results["albums"] = album_res.get("data", [])
 
-        if not data.get("data"):
-            raise HTTPException(status_code=404, detail="No track found")
-        return data["data"]
-    
-    except Exception as e:
+        return results
+
+    except requests.RequestException as e:
         raise HTTPException(status_code=500, detail=str(e))
