@@ -7,7 +7,11 @@ export default function Home() {
   const [homeData, setHomeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { playlists, loading: playlistLoading, error: playlistsError } = useMenuPlaylists();
+  const {
+    playlists,
+    loading: playlistLoading,
+    error: playlistsError,
+  } = useMenuPlaylists();
 
   useEffect(() => {
     axios
@@ -23,14 +27,22 @@ export default function Home() {
       });
   }, []);
 
-  if (loading || playlistLoading) return <p className="text-center mt-10">Loading recommendations</p>;
-  if (error || playlistsError) return <p className="text-center mt-10 text-red-500">{error || playlistsError}</p>;
+  if (loading || playlistLoading)
+    return <p className="text-center mt-10">Loading recommendations</p>;
+  if (error || playlistsError)
+    return (
+      <p className="text-center mt-10 text-red-500">
+        {error || playlistsError}
+      </p>
+    );
 
   return (
     <div className="p-6 space-y-10">
       {/* Your Library Section */}
       <section className="mb-8">
-        <h1 className="text-xl font-bold mb-4">Your Library NO EXISTE EN SPOTIFY PERO REFERENCIA TEMPORAL</h1>
+        <h1 className="text-xl font-bold mb-4">
+          Your Library NO EXISTE EN SPOTIFY PERO REFERENCIA TEMPORAL
+        </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {playlists.length > 0 ? (
             playlists.map((playlist) => (
@@ -38,7 +50,11 @@ export default function Home() {
                 key={playlist.id}
                 id={playlist.id}
                 title={playlist.title || playlist.name}
-                image={playlist.image_medium || playlist.picture || playlist.cover_medium}
+                image={
+                  playlist.image_medium ||
+                  playlist.picture ||
+                  playlist.cover_medium
+                }
                 layout="horizontal"
               />
             ))
@@ -47,23 +63,27 @@ export default function Home() {
           )}
         </div>
       </section>
-        {/* Recommendation Section */}
+      {/* Recommendation Section */}
 
       <section className="overflow-x-auto scrollbar-hide flex gap-4 py-2">
-
-          {Array.isArray(homeData?.made_for_you) && homeData.made_for_you.length > 0 && (
+        {Array.isArray(homeData?.made_for_you) &&
+          homeData.made_for_you.length > 0 && (
             <Section title="Made for you" items={homeData.made_for_you} />
           )}
 
-          {Array.isArray(homeData?.daily_mix) && homeData.daily_mix.length > 0 && (
+        {Array.isArray(homeData?.daily_mix) &&
+          homeData.daily_mix.length > 0 && (
             <Section title="Daily Mix" items={homeData.daily_mix} />
           )}
 
-          {Array.isArray(homeData?.popular_stations) && homeData.popular_stations.length > 0 && (
-            <Section title="Popular Stations" items={homeData.popular_stations} />
+        {Array.isArray(homeData?.popular_stations) &&
+          homeData.popular_stations.length > 0 && (
+            <Section
+              title="Popular Stations"
+              items={homeData.popular_stations}
+            />
           )}
       </section>
-
     </div>
   );
 }

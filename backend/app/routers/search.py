@@ -12,28 +12,33 @@ router = APIRouter(
     },
 )
 
-@router.get("")
+@router.get("/")
 async def search_all(q: str = Query(..., description="Texto a buscar en Deezer")):
     try:
         results = {}
 
         # Canciones
-        track_res = requests.get(f"{URL_FETCH}/search/track", params={"q": q}).json()
+        track_res = requests.get(f"{URL_FETCH}/search/track", params={"q": q, "limit": 10}).json()
         results["tracks"] = track_res.get("data", [])
 
         # Artistas
-        artist_res = requests.get(f"{URL_FETCH}/search/artist", params={"q": q}).json()
+        artist_res = requests.get(f"{URL_FETCH}/search/artist", params={"q": q, "limit": 5}).json()
         results["artists"] = artist_res.get("data", [])
 
         # Playlists
-        playlist_res = requests.get(f"{URL_FETCH}/search/playlist", params={"q": q}).json()
+        playlist_res = requests.get(f"{URL_FETCH}/search/playlist", params={"q": q, "limit": 5}).json()
         results["playlists"] = playlist_res.get("data", [])
 
         # Álbumes
-        album_res = requests.get(f"{URL_FETCH}/search/album", params={"q": q}).json()
+        album_res = requests.get(f"{URL_FETCH}/search/album", params={"q": q, "limit": 5}).json()
         results["albums"] = album_res.get("data", [])
 
-        return results
+        return {
+            "tracks": results.get("tracks", []),
+            "artists": results.get("artists", []),
+            "playlists": results.get("playlists", []),
+            "albums": results.get("albums", []),
+        }
 
     except requests.RequestException as e:
         raise HTTPException(status_code=500, detail=str(e))
