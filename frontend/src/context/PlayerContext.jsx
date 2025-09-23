@@ -1,4 +1,3 @@
-// src/context/PlayerContext.jsx
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const PlayerContext = createContext(null);
@@ -12,6 +11,10 @@ export function PlayerProvider({ children }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  // Estado de volumen y mute
+  const [volume, setVolume] = useState(1); // volumen entre 0 y 1
+  const [muted, setMuted] = useState(false);
 
   // listeners de audio
   useEffect(() => {
@@ -54,10 +57,17 @@ export function PlayerProvider({ children }) {
       audio.src = current.preview;
     }
     audio.currentTime = 0;
+    audio.volume = muted ? 0 : volume;
     audio.play()
       .then(() => setPlaying(true))
       .catch(() => setPlaying(false));
   }, [current]);
+
+  // aplicar cambios de volumen y mute
+  useEffect(() => {
+    const audio = audioRef.current;
+    audio.volume = muted ? 0 : volume;
+  }, [volume, muted]);
 
   function playTrack(trackOrList, startIndex = 0) {
     // si es array => set cola entera
@@ -129,6 +139,10 @@ export function PlayerProvider({ children }) {
     }
   }
 
+  function toggleMute() {
+    setMuted((m) => !m);
+  }
+
   return (
     <PlayerContext.Provider value={{
       audioRef,
@@ -145,7 +159,11 @@ export function PlayerProvider({ children }) {
       queue,
       index,
       next,
-      prev
+      prev,
+      volume,
+      setVolume,
+      muted,
+      toggleMute,
     }}>
       {children}
     </PlayerContext.Provider>
